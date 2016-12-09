@@ -96,7 +96,6 @@ PGMImage *readPGMfile(char *filename) {
                 fscanf(in_file, "%d", &ch_int);
             }
             img->data[row][col] = (unsigned char) ch_int;
-            //printf("%d", ch_int);
         }
     }
 
