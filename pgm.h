@@ -18,4 +18,6 @@ void savePGMImage(char *fname, PGMImage *img);
 
 void freePGMImage(PGMImage *img);
 
+PGMImage *createPGMImage(unsigned int width, unsigned int height);
+
 #endif //PGMREADER_PGM_H

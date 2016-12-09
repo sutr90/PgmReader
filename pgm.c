@@ -103,7 +103,6 @@ PGMImage *readPGMfile(char *filename) {
     return img;
 }
 
-
 void savePGMImage(char *fname, PGMImage *img) {
     int i, j;
     int gray = 0;
@@ -112,7 +111,7 @@ void savePGMImage(char *fname, PGMImage *img) {
     iop = fopen(fname, "w");
     fprintf(iop, "P2\n");
     fprintf(iop, "%d %d\n", img->width, img->height);
-    fprintf(iop, "255\n");
+    fprintf(iop, "%d\n", img->maxVal);
 
     for (i = 0; i < img->height; i++) {
         for (j = 0; j < img->width; j++) {
@@ -138,4 +137,18 @@ void freePGMImage(PGMImage *img) {
     }
     free(img->data);
     free(img);
+}
+
+PGMImage *createPGMImage(unsigned int width, unsigned int height) {
+    PGMImage *img = malloc(sizeof(PGMImage));
+    img->width = width;
+    img->height = height;
+    img->maxVal = 255;
+    int row;
+    img->data = (unsigned char **) malloc(sizeof(unsigned char **) * img->height);
+    for (row = 0; row < img->height; row++) {
+        img->data[row] = (unsigned char *) malloc(sizeof(unsigned char) * img->width);
+    }
+
+    return img;
 }

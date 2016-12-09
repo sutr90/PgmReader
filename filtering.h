@@ -1,0 +1,8 @@
+//
+// Created by VF on 9. 12. 2016.
+//
+
+#ifndef PGMREADER_FILTERING_H
+#define PGMREADER_FILTERING_H
+
+#endif //PGMREADER_FILTERING_H
