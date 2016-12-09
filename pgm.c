@@ -86,16 +86,15 @@ PGMImage *readPGMfile(char *filename) {
         skipWhitespaceComment(in_file);
     }
 
-    img->data = (unsigned char **) malloc(sizeof(unsigned char **) * img->height);
+    img->data = (unsigned char *) malloc(img->width * img->height);
     for (row = 0; row < img->height; row++) {
-        img->data[row] = (unsigned char *) malloc(sizeof(unsigned char) * img->width);
         for (col = 0; col < img->width; col++) {
             if (type == 5) {
                 ch_int = fgetc(in_file);
             } else {
                 fscanf(in_file, "%d", &ch_int);
             }
-            img->data[row][col] = (unsigned char) ch_int;
+            img->data[row * img->width + col] = (unsigned char) ch_int;
         }
     }
 
@@ -115,7 +114,7 @@ void savePGMImage(char *fname, PGMImage *img) {
 
     for (i = 0; i < img->height; i++) {
         for (j = 0; j < img->width; j++) {
-            gray = img->data[i][j];
+            gray = img->data[i * img->width + j];
             if (gray < 0) {
                 printf("IMG_WRITE: Found value %d at row %d col %d\n", gray, i, j);
                 printf("           Setting gray to zero\n");
@@ -130,11 +129,6 @@ void savePGMImage(char *fname, PGMImage *img) {
 }
 
 void freePGMImage(PGMImage *img) {
-    int row;
-
-    for (row = 0; row < img->height; row++) {
-        free(img->data[row]);
-    }
     free(img->data);
     free(img);
 }
@@ -144,11 +138,14 @@ PGMImage *createPGMImage(unsigned int width, unsigned int height) {
     img->width = width;
     img->height = height;
     img->maxVal = 255;
-    int row;
-    img->data = (unsigned char **) malloc(sizeof(unsigned char **) * img->height);
-    for (row = 0; row < img->height; row++) {
-        img->data[row] = (unsigned char *) malloc(sizeof(unsigned char) * img->width);
-    }
-
+    img->data = malloc(img->height * img->height);
     return img;
+}
+
+void setValue(PGMImage *img, unsigned int x, unsigned int y, unsigned char value) {
+    img->data[y * img->width + x] = value;
+}
+
+unsigned char getValue(PGMImage *img, unsigned int x, unsigned int y) {
+    return img->data[y * img->width + x];
 }

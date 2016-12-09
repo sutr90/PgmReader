@@ -11,4 +11,6 @@ PGMImage *gaussFilter(PGMImage *img, unsigned int size);
 
 PGMImage *sobelFilter(PGMImage *img, unsigned int size);
 
+PGMImage *adaptiveFilter(PGMImage *img, unsigned int size, unsigned int C);
+
 #endif //PGMREADER_FILTERING_H
