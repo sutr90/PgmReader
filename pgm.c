@@ -37,7 +37,9 @@ void skipWhitespaceComment(FILE *stream) {
 PGMImage *readPGMfile(char *filename) {
     FILE *in_file;
     char ch;
-    int row, col, type;
+    int type;
+    unsigned int y;
+    unsigned int x;
     int ch_int;
 
     in_file = fopen(filename, "r");
@@ -87,14 +89,15 @@ PGMImage *readPGMfile(char *filename) {
     }
 
     img->data = (unsigned char *) malloc(img->width * img->height);
-    for (row = 0; row < img->height; row++) {
-        for (col = 0; col < img->width; col++) {
+    for (y = 0; y < img->height; y++) {
+        for (x = 0; x < img->width; x++) {
             if (type == 5) {
                 ch_int = fgetc(in_file);
             } else {
                 fscanf(in_file, "%d", &ch_int);
             }
-            img->data[row * img->width + col] = (unsigned char) ch_int;
+
+            setValue(img, x, y, (unsigned char) ch_int);
         }
     }
 
@@ -103,7 +106,8 @@ PGMImage *readPGMfile(char *filename) {
 }
 
 void savePGMImage(char *fname, PGMImage *img) {
-    int i, j;
+    unsigned int x;
+    unsigned int y;
     int gray = 0;
     FILE *iop;
 
@@ -112,11 +116,11 @@ void savePGMImage(char *fname, PGMImage *img) {
     fprintf(iop, "%d %d\n", img->width, img->height);
     fprintf(iop, "%d\n", img->maxVal);
 
-    for (i = 0; i < img->height; i++) {
-        for (j = 0; j < img->width; j++) {
-            gray = img->data[i * img->width + j];
+    for (y = 0; y < img->height; y++) {
+        for (x = 0; x < img->width; x++) {
+            gray = getValue(img, x, y);
             if (gray < 0) {
-                printf("IMG_WRITE: Found value %d at row %d col %d\n", gray, i, j);
+                printf("IMG_WRITE: Found value %d at row %d col %d\n", gray, y, x);
                 printf("           Setting gray to zero\n");
                 gray = 0;
             }

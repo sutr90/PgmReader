@@ -5,7 +5,7 @@ int main() {
     PGMImage *img, *img2;
 
     img = readPGMfile("D:\\tmp\\lenna.pgm");
-    savePGMImage("D:\\tmp\\lenna2.pgm", img);
+//    savePGMImage("D:\\tmp\\lenna2.pgm", img);
 
 //    img2 = gaussFilter(img);
 //    savePGMImage("D:\\tmp\\gauss.pgm", img2);
