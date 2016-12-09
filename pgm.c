@@ -142,7 +142,7 @@ PGMImage *createPGMImage(unsigned int width, unsigned int height) {
     img->width = width;
     img->height = height;
     img->maxVal = 255;
-    img->data = malloc(img->height * img->height);
+    img->data = malloc(img->width * img->height);
     return img;
 }
 

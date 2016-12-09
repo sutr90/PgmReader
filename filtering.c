@@ -24,10 +24,10 @@ int sobelYKernel[3][3] = {
 };
 
 PGMImage *gaussFilter(PGMImage *img) {
-    PGMImage *result = createPGMImage(img->height - 2, img->width - 2);
+    PGMImage *result = createPGMImage(img->width - 2, img->height - 2);
 
-    for (unsigned int y = 0; y < img->height - 2; y++) {
-        for (unsigned int x = 0; x < img->width - 2; x++) {
+    for (unsigned int y = 0; y < result->height; y++) {
+        for (unsigned int x = 0; x < result->width; x++) {
             double g = gaussKernel[0][0] * getValue(img, x, y) +
                        gaussKernel[0][1] * getValue(img, x, y + 1) +
                        gaussKernel[0][2] * getValue(img, x, y + 2) +
@@ -46,7 +46,7 @@ PGMImage *gaussFilter(PGMImage *img) {
 }
 
 PGMImage *sobelFilter(PGMImage *img) {
-    PGMImage *result = createPGMImage(img->height - 2, img->width - 2);
+    PGMImage *result = createPGMImage(img->width - 2, img->height - 2);
 
     for (unsigned int y = 0; y < img->height - 2; y++) {
         for (unsigned int x = 0; x < img->width - 2; x++) {
@@ -91,8 +91,9 @@ PGMImage *adaptiveFilter(PGMImage *img, unsigned int size, unsigned int C) {
     unsigned int border = size / 2;
     PGMImage *result = createPGMImage(img->width + 1 - size, img->height + 1 - size);
 
-    for (unsigned int y = border; y < img->height - border - 1; y++) {
-        for (unsigned int x = border; x < img->width - border - 1; x++) {
+
+    for (unsigned int y = border; y < img->height - border - 2; y++) {
+        for (unsigned int x = border; x < img->width - border - 2; x++) {
             double mean = getNeighborhoodMean(img, x, y, size);
             if (getValue(img, x, y) > (mean - C)) {
                 setValue(result, x - border, y - border, 255);
