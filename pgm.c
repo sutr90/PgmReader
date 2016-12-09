@@ -59,9 +59,9 @@ PGMImage *readPGMfile(char *filename) {
     fscanf(in_file, "%d", &(img->height));
     fscanf(in_file, "%d", &(img->maxVal));
 
-    img->data = (unsigned char **) malloc((size_t) img->height);
+    img->data = (unsigned char **) malloc(sizeof(unsigned char **) * img->height);
     for (row = 0; row < img->height; row++) {
-        img->data[row] = (unsigned char *) malloc((size_t) img->width);
+        img->data[row] = (unsigned char *) malloc(sizeof(unsigned char) * img->width);
         for (col = 0; col < img->width; col++) {
             if (type == 5) {
                 fscanf(in_file, "%d", &ch_int);
@@ -79,7 +79,7 @@ PGMImage *readPGMfile(char *filename) {
 
 void savePGMImage(char *fname, PGMImage *img) {
     int i, j;
-    int gray;
+    int gray = 0;
     FILE *iop;
 
     iop = fopen(fname, "w");
@@ -110,4 +110,5 @@ void freePGMImage(PGMImage *img) {
         free(img->data[row]);
     }
     free(img->data);
+    free(img);
 }
