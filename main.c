@@ -3,9 +3,9 @@
 int main() {
     PGMImage *img;
 
-    img = readPGMfile("D:\\tmp\\feep.pgm");
+    img = readPGMfile("D:\\tmp\\lenna.pgm");
 
-    savePGMImage("D:\\tmp\\feep2.pgm", img);
+    savePGMImage("D:\\tmp\\lenna2.pgm", img);
 
     freePGMImage(img);
 
