@@ -4,16 +4,34 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
+
 #include "pgm.h"
 
-int fpeek(FILE *stream)
-{
+
+int fpeek(FILE *stream) {
     int c;
 
     c = fgetc(stream);
     ungetc(c, stream);
 
     return c;
+}
+
+void skipComment(FILE *stream) {
+    while ((char) fpeek(stream) == '#')              /* skip comment lines */
+    {
+        while ((char) getc(stream) != '\n');          /* skip to end of comment line */
+    }
+}
+
+void skipWhitespace(FILE *stream) {
+    while (isspace(fpeek(stream))) getc(stream);
+}
+
+void skipWhitespaceComment(FILE *stream) {
+    skipWhitespace(stream);
+    skipComment(stream);
 }
 
 PGMImage *readPGMfile(char *filename) {
@@ -41,18 +59,32 @@ PGMImage *readPGMfile(char *filename) {
         return NULL;
     }
 
+    skipWhitespaceComment(in_file);
+
     PGMImage *img = malloc(sizeof(PGMImage));
-
-    while (getc(in_file) != '\n');             /* skip to end of line*/
-
-    while ((char) fpeek(in_file) == '#')              /* skip comment lines */
-    {
-        while ((char) getc(in_file)!= '\n');          /* skip to end of comment line */
-    }
-
     fscanf(in_file, "%d", &(img->width));
     fscanf(in_file, "%d", &(img->height));
     fscanf(in_file, "%d", &(img->maxVal));
+    getc(in_file); // line end
+
+    if (type == 5) {
+        fclose(in_file);
+        in_file = fopen(filename, "rb");
+
+        /* magic number */
+        fgetc(in_file);
+        fgetc(in_file);
+        skipWhitespaceComment(in_file);
+        /* width */
+        while (!isspace(fpeek(in_file))) { getc(in_file); }
+        skipWhitespaceComment(in_file);
+        /* height */
+        while (!isspace(fpeek(in_file))) { getc(in_file); }
+        skipWhitespaceComment(in_file);
+        /* maxval */
+        while (!isspace(fpeek(in_file))) { getc(in_file); }
+        skipWhitespaceComment(in_file);
+    }
 
     img->data = (unsigned char **) malloc(sizeof(unsigned char **) * img->height);
     for (row = 0; row < img->height; row++) {
@@ -64,6 +96,7 @@ PGMImage *readPGMfile(char *filename) {
                 fscanf(in_file, "%d", &ch_int);
             }
             img->data[row][col] = (unsigned char) ch_int;
+            //printf("%d", ch_int);
         }
     }
 
