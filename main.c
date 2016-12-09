@@ -1,19 +1,17 @@
 #include "pgm.h"
+#include "filtering.h"
 
 int main() {
-    PGMImage *img;
+    PGMImage *img, *img2;
 
     img = readPGMfile("D:\\tmp\\lenna.pgm");
 
-    savePGMImage("D:\\tmp\\lenna2.pgm", img);
+    img2 = sobelFilter(img, 0);
+
+    savePGMImage("D:\\tmp\\rand.pgm", img2);
 
     freePGMImage(img);
-
-    img = createPGMImage(100, 100);
-
-    savePGMImage("D:\\tmp\\rand.pgm", img);
-
-    freePGMImage(img);
+    freePGMImage(img2);
 
     return 0;
 }

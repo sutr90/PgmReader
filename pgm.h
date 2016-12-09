@@ -6,10 +6,10 @@
 #define PGMREADER_PGM_H
 
 typedef struct PGMstructure {
-    int width;
-    int height;
+    unsigned int width;
+    unsigned int height;
     unsigned char **data;
-    int maxVal;
+    unsigned int maxVal;
 } PGMImage;
 
 PGMImage *readPGMfile(char *filename);
