@@ -23,7 +23,7 @@ int sobelYKernel[3][3] = {
         {1,  2,  1}
 };
 
-PGMImage *gaussFilter(PGMImage *img, unsigned int size) {
+PGMImage *gaussFilter(PGMImage *img) {
     PGMImage *result = createPGMImage(img->height - 2, img->width - 2);
 
     for (unsigned int y = 0; y < img->height - 2; y++) {
@@ -37,14 +37,15 @@ PGMImage *gaussFilter(PGMImage *img, unsigned int size) {
                        gaussKernel[2][0] * getValue(img, x + 2, y) +
                        gaussKernel[2][1] * getValue(img, x + 2, y + 1) +
                        gaussKernel[2][2] * getValue(img, x + 2, y + 2);
-            setValue(img, x, y, (unsigned char) g);
+
+            setValue(result, x, y, (unsigned char) g);
         }
     }
 
     return result;
 }
 
-PGMImage *sobelFilter(PGMImage *img, unsigned int size) {
+PGMImage *sobelFilter(PGMImage *img) {
     PGMImage *result = createPGMImage(img->height - 2, img->width - 2);
 
     for (unsigned int y = 0; y < img->height - 2; y++) {
@@ -69,7 +70,7 @@ PGMImage *sobelFilter(PGMImage *img, unsigned int size) {
                      sobelYKernel[2][1] * getValue(img, x + 2, y + 1) +
                      sobelYKernel[2][2] * getValue(img, x + 2, y + 2);
 
-            setValue(img, x, y, (unsigned char) sqrt(gx * gx + gy * gy));
+            setValue(result, x, y, (unsigned char) sqrt(gx * gx + gy * gy));
         }
     }
 
