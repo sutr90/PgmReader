@@ -6,6 +6,16 @@
 #include <stdlib.h>
 #include "pgm.h"
 
+int fpeek(FILE *stream)
+{
+    int c;
+
+    c = fgetc(stream);
+    ungetc(c, stream);
+
+    return c;
+}
+
 PGMImage *readPGMfile(char *filename) {
     FILE *in_file;
     char ch;
@@ -26,7 +36,7 @@ PGMImage *readPGMfile(char *filename) {
     ch = (char) getc(in_file);
 
     type = ch - '0';
-    if (type != 2) {
+    if ((type != 2) && (type != 5)) {
         fprintf(stderr, "ERROR(2): Not valid pgm/ppm file type\n");
         return NULL;
     }
@@ -35,26 +45,31 @@ PGMImage *readPGMfile(char *filename) {
 
     while (getc(in_file) != '\n');             /* skip to end of line*/
 
-    while (getc(in_file) == '#')              /* skip comment lines */
+    char c;
+
+    while ((c = (char) fpeek(in_file)) == '#')              /* skip comment lines */
     {
-        while (getc(in_file) != '\n');          /* skip to end of comment line */
+        while ((c = (char) getc(in_file))!= '\n'){
+            printf("%c", c);
+        };          /* skip to end of comment line */
     }
 
-    fseek(in_file, -1, SEEK_CUR);             /* backup one character*/
-
+    printf("%li", ftell(in_file));
     fscanf(in_file, "%d", &(img->width));
     fscanf(in_file, "%d", &(img->height));
     fscanf(in_file, "%d", &(img->maxVal));
 
     img->data = (unsigned char **) malloc((size_t) img->height);
-
     for (row = 0; row < img->height; row++) {
         img->data[row] = (unsigned char *) malloc((size_t) img->width);
         for (col = 0; col < img->width; col++) {
-            fscanf(in_file, "%d", &ch_int);
+            if (type == 5) {
+                fscanf(in_file, "%d", &ch_int);
+            } else {
+                ch_int = fgetc(in_file);
+            }
             img->data[row][col] = (unsigned char) ch_int;
         }
-        printf("\n");
     }
 
     fclose(in_file);
