@@ -3,3 +3,8 @@
 //
 
 #include "filtering.h"
+#include <stdlib.h>
+
+PGMImage *gaussFilter(PGMImage *img, unsigned int size) {
+    return NULL;
+}
