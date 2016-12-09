@@ -45,16 +45,11 @@ PGMImage *readPGMfile(char *filename) {
 
     while (getc(in_file) != '\n');             /* skip to end of line*/
 
-    char c;
-
-    while ((c = (char) fpeek(in_file)) == '#')              /* skip comment lines */
+    while ((char) fpeek(in_file) == '#')              /* skip comment lines */
     {
-        while ((c = (char) getc(in_file))!= '\n'){
-            printf("%c", c);
-        };          /* skip to end of comment line */
+        while ((char) getc(in_file)!= '\n');          /* skip to end of comment line */
     }
 
-    printf("%li", ftell(in_file));
     fscanf(in_file, "%d", &(img->width));
     fscanf(in_file, "%d", &(img->height));
     fscanf(in_file, "%d", &(img->maxVal));
@@ -64,9 +59,9 @@ PGMImage *readPGMfile(char *filename) {
         img->data[row] = (unsigned char *) malloc(sizeof(unsigned char) * img->width);
         for (col = 0; col < img->width; col++) {
             if (type == 5) {
-                fscanf(in_file, "%d", &ch_int);
-            } else {
                 ch_int = fgetc(in_file);
+            } else {
+                fscanf(in_file, "%d", &ch_int);
             }
             img->data[row][col] = (unsigned char) ch_int;
         }
