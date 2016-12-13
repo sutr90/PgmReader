@@ -14,8 +14,8 @@ typedef struct PGMstructure {
     /** vyska obrazku */
     unsigned int height;
     /**
-     * Jednotlive pixely. Ulozene ve 2D poli, po radcich.
-     * Jedna se o pole poli, kdy kazde pole ma width prvku, celkem je zde height radek.
+     * Jednotlive pixely, ulozene ve 2D poli, po radcich.
+     * Jedna se o pole poli, kdy kazde pole ma width prvku, celkem je zde height poli.
      * K jednotlivym pixelum je mozno pristupovat stylem img->data[y][x].
      * Pozor na prohozene poradi souradnic!!
      */
