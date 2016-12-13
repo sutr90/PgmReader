@@ -7,10 +7,9 @@
 
 #include "pgm.h"
 
-PGMImage *gaussFilter(PGMImage *img);
-
-PGMImage *sobelFilter(PGMImage *img);
-
-PGMImage *adaptiveFilter(PGMImage *img, unsigned int size, unsigned int C);
+/*
+ *
+ */
+PGMImage *sobelFilter(PGMImage *img, char mode);
 
 #endif //PGMREADER_FILTERING_H
