@@ -88,16 +88,16 @@ PGMImage *readPGMfile(char *filename) {
         skipWhitespaceComment(in_file);
     }
 
-    img->data = (unsigned char *) malloc(img->width * img->height);
+    img->data = (unsigned char **) malloc(sizeof(unsigned char **) * img->height);
     for (y = 0; y < img->height; y++) {
+        img->data[y] = (unsigned char *) malloc(sizeof(unsigned char) * img->width);
         for (x = 0; x < img->width; x++) {
             if (type == 5) {
                 ch_int = fgetc(in_file);
             } else {
                 fscanf(in_file, "%d", &ch_int);
             }
-
-            setValue(img, x, y, (unsigned char) ch_int);
+            img->data[y][x] = (unsigned char) ch_int;
         }
     }
 
@@ -118,7 +118,7 @@ void savePGMImage(char *fname, PGMImage *img) {
 
     for (y = 0; y < img->height; y++) {
         for (x = 0; x < img->width; x++) {
-            gray = getValue(img, x, y);
+            gray = img->data[y][x];
             if (gray < 0) {
                 printf("IMG_WRITE: Found value %d at row %d col %d\n", gray, y, x);
                 printf("           Setting gray to zero\n");
@@ -133,6 +133,11 @@ void savePGMImage(char *fname, PGMImage *img) {
 }
 
 void freePGMImage(PGMImage *img) {
+    int row;
+
+    for (row = 0; row < img->height; row++) {
+        free(img->data[row]);
+    }
     free(img->data);
     free(img);
 }
@@ -142,14 +147,11 @@ PGMImage *createPGMImage(unsigned int width, unsigned int height) {
     img->width = width;
     img->height = height;
     img->maxVal = 255;
-    img->data = malloc(img->width * img->height);
+    int row;
+    img->data = (unsigned char **) malloc(sizeof(unsigned char **) * img->height);
+    for (row = 0; row < img->height; row++) {
+        img->data[row] = (unsigned char *) malloc(sizeof(unsigned char) * img->width);
+    }
+
     return img;
-}
-
-void setValue(PGMImage *img, unsigned int x, unsigned int y, unsigned char value) {
-    img->data[y * img->width + x] = value;
-}
-
-unsigned char getValue(PGMImage *img, unsigned int x, unsigned int y) {
-    return img->data[y * img->width + x];
 }
