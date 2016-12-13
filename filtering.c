@@ -3,7 +3,7 @@
 #include <math.h>
 
 
-/*
+/**
  * Sobeluv filtr pro smer X.
  */
 int sobelXKernel[3][3] = {
@@ -13,7 +13,7 @@ int sobelXKernel[3][3] = {
 };
 
 
-/*
+/**
  * Sobeluv filtr pro smer Y.
  */
 int sobelYKernel[3][3] = {
